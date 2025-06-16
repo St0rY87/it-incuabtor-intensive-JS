@@ -7,12 +7,14 @@ const playlists = [
             {
                 artist: 'Eminem',
                 title: 'Rap God',
-                isHot: true
+                isHot: true,
+                imageSource: 'cardImage/trackList/alan-walker.jpg'
             },
             {
                 artist: '50 cent',
                 title: 'In da club',
-                isHot: false
+                isHot: false,
+                imageSource: 'cardImage/trackList/burak-yeter.jpg'
             }
         ]
     },
@@ -31,31 +33,80 @@ const playlists = [
 ]
 // RENDER
 const root = document.getElementById('root');
+const playlistsElement = PlaylistsComponent(playlists)
+root.append(playlistsElement)
 
-for (let i = 0; i < playlists.length; i++) {
-    const playlist = playlists[i];
+function PlaylistsComponent(inputPlaylists) {
+    const element = document.createElement('div');
 
-    const playlistElement = document.createElement('div');
+    for (let i = 0; i < inputPlaylists.length; i++) {
+        const playlist = inputPlaylists[i];
+        element.append(PlaylistComponent(playlist))
+    }
+    return element
+}
 
+// components
+function PlaylistComponent(inputPlaylist) {
+
+    const element = createElement('div', ['playlist']);
+
+    //to do playlist title
     const playlistTitleElement = document.createElement('h2');
-    playlistTitleElement.append(playlist.title);
+    playlistTitleElement.append(inputPlaylist.title);
 
-    playlistElement.append(playlistTitleElement)
+    element.append(playlistTitleElement)
 
     const tracksElement = document.createElement('ul');
 
-    for (let j = 0; j < playlist.tracks.length; j++) {
-        const track = playlist.tracks[j];
+    element.append(TracksComponent(inputPlaylist.tracks))
 
-        const trackElement = document.createElement('li');
-        trackElement.append(track.title)
-
-        tracksElement.append(trackElement)
-    }
-
-    playlistElement.append(tracksElement)
-
-    root.append(playlistElement)
+    return element
 
 }
+
+function TracksComponent(inputTracks) {
+    const element = document.createElement('ul');
+
+    for (let j = 0; j < inputTracks.length; j++) {
+        const track = inputTracks[j];
+
+        const trackElement = TrackComponent(track);
+
+        element.append(trackElement)
+    }
+
+    return element;
+}
+function TrackComponent(inputTrack) {
+    //create
+    const element = document.createElement('li');
+
+    //add data
+    element.append(
+        TrackImageComponent(inputTrack.imageSource),
+        TrackTitleComponent(inputTrack));
+
+    //return
+    return element;
+}
+function TrackImageComponent(inputImageSource) {
+    const element = document.createElement('img');
+    element.src = inputImageSource;
+
+    return element
+}
+function TrackTitleComponent(inputTrack) {
+    return `${(inputTrack.isHot ? '🔥 ' : '') + inputTrack.artist} - ${inputTrack.title}`;
+}
+
+function createElement(tagName, classes = []) {
+    const element = document.createElement(tagName);
+    classes.forEach((c) => {
+        element.classList.add(c)
+    })
+
+    return element;
+}
+
 
